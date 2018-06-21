@@ -1,1 +1,0 @@
-# talkpal_laravel
