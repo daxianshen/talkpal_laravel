@@ -74,7 +74,8 @@ export default {
   },
   methods: {
     sLogisticsClickFn: function(bol) {
-      this.logisticsBol = bol;
+      // this.logisticsBol = bol;
+      alert("该功能正在努力开发中！");
     },
     getOrderList: function () {
       let that = this;
