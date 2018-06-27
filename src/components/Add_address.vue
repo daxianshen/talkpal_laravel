@@ -61,10 +61,10 @@ export default {
       for (let key in this.consignee) {
         if(!this.consignee[key]){
           switch (key) {
-            case 'name':
+            case 'full_name':
               n = '收货人'
               break;
-            case 'phone':
+            case 'phone_number':
               n = '电话'
               break;
             case 'region':
@@ -134,6 +134,9 @@ export default {
 </script>
 
 <style>
+body{
+  background-color: #ffffff;
+}
 .addressDetail p {
   padding: 0 1.25rem;
   line-height: 3rem;

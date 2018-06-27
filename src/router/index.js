@@ -21,7 +21,7 @@ export default new Router({
       }
     },
     {
-      path: '/',
+      path: '/mall/',
       name: 'Index',
       component: Indexs,
       meta: {
@@ -29,7 +29,7 @@ export default new Router({
       }
     },
     {
-      path: '/goods',
+      path: '/mall/goods',
       name: 'Goods',
       component: Goods,
       meta: {
@@ -37,7 +37,7 @@ export default new Router({
       }
     },
     {
-      path: '/closed',
+      path: '/mall/closed',
       name: 'Closed',
       component: Closed,
       meta: {
@@ -45,7 +45,7 @@ export default new Router({
       }
     },
     {
-      path: '/exchangeRecord',
+      path: '/mall/exchangeRecord',
       name: 'ExchangeRecord',
       component: ExchangeRecord,
       meta: {
@@ -53,7 +53,7 @@ export default new Router({
       }
     },
     {
-      path: '/add_address',
+      path: '/mall/add_address',
       name: 'Add_address',
       component: Add_address,
       meta: {

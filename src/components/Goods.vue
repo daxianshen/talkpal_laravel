@@ -82,7 +82,7 @@ export default {
           id = goodsInfo.id,
           name = goodsInfo.name,
           price = goodsInfo.price;
-      this.$router.push('/closed?id='+id+"&name="+name+'&price='+price);
+      this.$router.push('/mall/closed?id='+id+"&name="+name+'&price='+price);
     },
     getRequest: function () {
       var url = location.search; //获取url中"?"符后的字串

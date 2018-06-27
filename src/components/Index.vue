@@ -102,10 +102,10 @@ export default {
       // })
     },
     goodsClick: function(num){
-      this.$router.push('/goods?id='+num);
+      this.$router.push('/mall/goods?id='+num);
     },
     tRecordClickFn: function () {
-      this.$router.push('/exchangeRecord');      
+      this.$router.push('/mall/exchangeRecord');      
     },
     getRequest: function () {
       var url = location.search; //获取url中"?"符后的字串

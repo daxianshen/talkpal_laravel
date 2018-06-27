@@ -43,7 +43,7 @@
         <img :src="recharge">
         <span>兑换成功</span>
         <p>恭喜你成功兑换<br>粉红猪小妹</p>
-        <span @click="closedBolFn(false)">好的</span>
+        <span @click="querenFn(false)">好的</span>
       </div>
     </div>
     <div v-if="addressListBol" class="successBox">
@@ -151,10 +151,10 @@ export default {
       //  console.log(this.consignee[key]);
         if(!this.consignee[key]){
           switch (key) {
-            case 'name':
+            case 'full_name':
               n = '收货人'
               break;
-            case 'phone':
+            case 'phone_number':
               n = '电话'
               break;
             case 'region':
@@ -185,6 +185,12 @@ export default {
       // if(!bol){
       //   this.$router.replace('/');
       // }
+    },
+    querenFn(bol){
+      this.closedSuccessBol = bol;
+      if(!bol){
+        this.$router.replace('/');
+      }
     },
     postAddress: function () {
       let that = this;
@@ -227,7 +233,7 @@ export default {
       });
     },
     jumpAdd_address: function () {
-      this.$router.push('/add_address');
+      this.$router.push('/mall/add_address');
     },
     addressClick(index){
       this.addressListBol = false;
