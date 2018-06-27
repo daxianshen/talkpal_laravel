@@ -5,10 +5,12 @@ import Indexs from '@/components/Index'
 import Goods from '@/components/Goods'
 import Closed from '@/components/Closed'
 import ExchangeRecord from '@/components/ExchangeRecord'
+import Add_address from '@/components/Add_address'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/hello',
@@ -48,6 +50,14 @@ export default new Router({
       component: ExchangeRecord,
       meta: {
         title: '兑换记录'
+      }
+    },
+    {
+      path: '/add_address',
+      name: 'Add_address',
+      component: Add_address,
+      meta: {
+        title: '新增地址'
       }
     }
   ]

@@ -5,7 +5,7 @@
       <div class="palPointBox">
         <span class="palPoint">
           <img src="../image/img-shop-palpoint-big.png" align="center">
-          我的派点： 1234
+          我的派点： {{palpoint}}
         </span>
         <span class="ticketRecord" @click="tRecordClickFn">兑奖记录</span>
       </div>
@@ -13,12 +13,12 @@
     <div class="hootGoods">
       <p>热门商品</p>
       <div class="goodsBox">
-        <div class="goods" v-for="(n,index) in 10" :key="index" @click="goodsClick(index)">
+        <div class="goods" v-for="(item,index) in goodsList" :key="index" @click="goodsClick(item.id)">
           <span class="limited">限量</span>
-          <!-- <span class="limited" :style="{'background-color': limitedColor}">限量</span> -->
-          <img class="goodsImg" src="../image/img-shop-palpoint-big@3x.png" alt="">
-          <p>小猪佩奇玩偶（蓝）</p>
-          <span class="goodsPrice"><img src="../image/img-shop-palpoint-big.png" align="center">1234</span>
+          <!-- <span class="limited" :style="{'background-color': limitedColor}">兑完</span> -->
+          <img class="goodsImg" src="../image/img-shop-palpoint-big@3x.png">
+          <p>{{item.name}}</p>
+          <span class="goodsPrice"><img src="../image/img-shop-palpoint-big.png" align="center">{{item.price}}</span>
         </div>
         <!-- <div class="goods">
           <span class="limited">限量</span>
@@ -32,21 +32,97 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
   name: "mallIndex",
   data() {
     return {
-      limitedColor: "#d5d8df"
+      palpoint: 0,
+      limitedColor: "#d5d8df",
+      goodsList: [
+        // {
+        //   goodsName: '',
+        //   goodsDetails: 0,
+        //   goodsImgSrc: '',
+        //   goodsId: 0,
+        //   goodsState: 'limited'
+        // }
+      ],
+      userId: 5026
     };
   },
   methods:{
+    getUserData: function () {
+      let userId = this.getRequest().userId ? this.getRequest().userId : this.userId;
+      let that = this;
+      axios.get('https://api.talkpal.com/users/' + userId , {
+
+      })
+      .then(function (response) {
+        let data = response.data.data;
+        console.log(response.data.data);
+        that.palpoint = data.pal_points;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+    getGoodsList: function() {
+      let that = this;
+      axios.get('https://api.talkpal.com/products', {
+        headers: {
+          'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
+        }
+      })
+      .then(function (response) {
+        console.log(response.data.data);
+        that.goodsList = response.data.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      // axios({
+      //   method: 'POST',
+      //   url: 'https://api.talkpal.com/products',
+      //   headers: {
+      //     'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
+      //   },
+      //   data: {
+      //     product:{
+      //       name: 'boy',
+      //       description: 'goodBoy',
+      //       price: 100,
+      //       currency: 'PalPoint',
+      //       count_on_hand: 10
+      //     }
+      //   }
+      // }).then(function(response) {
+      //   console.log(response.data);
+      // })
+    },
     goodsClick: function(num){
-      this.$router.push('/goods');
+      this.$router.push('/goods?id='+num);
     },
     tRecordClickFn: function () {
       this.$router.push('/exchangeRecord');      
+    },
+    getRequest: function () {
+      var url = location.search; //获取url中"?"符后的字串
+      var theRequest = new Object();
+      if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        var strs = str.split("&");
+        for(var i = 0; i < strs.length; i ++) {
+            theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+        }
+      }
+      return theRequest;
     }
+  },
+  created: function () {
+    this.getUserData();
+    this.getGoodsList();
   }
 };
 </script>

@@ -1,37 +1,41 @@
 <template>
-  <div class="closed">
+  <div class="closed goodsInfo">
     <div class="closedGoods">
       <p class="justify_between border_bottom">
         <span>兑换礼品</span>
-        <span>粉红猪小妹</span>
+        <span>{{goodsInfo.name}}</span>
       </p>
       <p class="justify_between">
         <span>数量</span>
         <span>x1</span>
       </p>
     </div>
-    <div>
+    <div class="addressDetail">
       <p class="justify_between border_bottom">
         <span>收货人</span>
-        <input type="text" placeholder="" v-model="consignee.name">
+        <input type="text" placeholder="" v-model="consignee.full_name">
       </p>
       <p class="justify_between">
         <span>联系电话</span>
-        <input type="text" placeholder="" v-model="consignee.phone">
+        <input type="text" placeholder="" v-model="consignee.phone_number">
       </p>
       <p class="justify_between border_bottom">
         <span>所在地区</span>
         <span  @click="choose" v-if="consignee.region">{{consignee.region}}</span>
-        <span  @click="choose" v-else>请选择 <img src="../image/more.png" alt=""></span>
+        <span  @click="choose" v-else>请选择 <img src="../image/more.png"></span>
       </p>
       <p class="justify_between">
         <span>详细地址</span>
         <!-- <input type="text" placeholder="填写详细地址"> -->
         <textarea name="city" id="city" cols="20" placeholder="填写详细地址" v-model="consignee.address"></textarea>
       </p>
+      <p class="justify_between AddressBtn">
+        <button @click="editAddress">选择地址</button>
+        <button @click="jumpAdd_address">添加地址</button>
+      </p>
     </div>
     <div class="footer">
-      <span class="exchangeNum">需要派点：3654</span>
+      <span class="exchangeNum">需要派点：{{goodsInfo.price}}</span>
       <span class="exchange"  @click="closedBolFn(true)">确认</span>
     </div>
     <div v-if="closedSuccessBol" class="successBox">
@@ -40,6 +44,18 @@
         <span>兑换成功</span>
         <p>恭喜你成功兑换<br>粉红猪小妹</p>
         <span @click="closedBolFn(false)">好的</span>
+      </div>
+    </div>
+    <div v-if="addressListBol" class="successBox">
+      <div class="successBoxContent" style="text-align: left;">
+        <div style="font-size: 1.5rem;padding-left: 1.25rem;">请选择</div>
+        <div class="addressItem" v-for="(items,index) in addressList" :key="index" @click="addressClick(index)">
+          <div class="justify_between">
+            <span>{{items.full_name}}</span>
+            <span>{{items.phone_number}}</span>
+          </div>
+          <div style="color: #bec1c8;margin-top: 0.5rem">{{items.province}}{{items.city}}{{items.district}}{{items.line1}}</div>
+        </div>
       </div>
     </div>
     <div class="divwrapBox" v-if="show">
@@ -52,8 +68,9 @@
 </template>
 
 <script>
-import VDistpicker from "v-distpicker";
+import VDistpicker from "v-distpicker"
 import Recharge from '../../static/img/recharge.png'
+import axios from 'axios'
 
 export default {
   name: "closed",
@@ -62,19 +79,73 @@ export default {
     return {
       closedSuccessBol: false,
       consignee: {
-        name: "",
-        phone: "",
+        full_name: "",
+        phone_number: "",
         region: "",
-        address: ""
+        address: "",
+        province: "",
+        city: "",
+        district: ""
       },
       show: false,
       region: "",
-      recharge: Recharge
+      recharge: Recharge,
+      goodsInfo: {},
+      address: {},
+      addressList: [],
+      addressListBol: false,
+      headers: {
+        'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
+      }
     };
   },
+  created: function () {
+    this.getGoodsInfo();
+    this.getAddressList();
+  },
   methods: {
+    getGoodsInfo: function () {
+      let that = this;
+      axios.get('https://api.talkpal.com/products/'+this.getRequest().id, {
+        headers: that.headers
+      })
+      .then(function (response) {
+        console.log(response.data.data);
+        that.goodsInfo = response.data.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+    getAddressList: function () {
+      let that = this;
+      axios.get('https://api.talkpal.com/addresses', {
+        params: {
+          category: 'goods'
+        },
+        headers: that.headers
+      })
+      .then(function (response) {
+        console.log(response.data.data);
+        that.addressList = response.data.data;
+        if (that.addressList.length === 0) {
+          alert(请添加地址);
+          return
+        }
+        that.addressList.map(function(item) {
+          item.region = item.province + item.city + item.district;
+          item.address = item.line1;
+        })
+        // that.addressListBol = true;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+    editAddress() {
+      this.addressListBol = true;
+    },
     closedBolFn: function(bol) {
-      
       let n = '';
       for (let key in this.consignee) {
       //  console.log(this.consignee[key]);
@@ -105,28 +176,93 @@ export default {
                 return
             }
           }
+          // console.log(this.consignee[key]);
         }
       }
+      // this.postAddress();
+      // this.postOrders();
       this.closedSuccessBol = bol;
-      if(!bol){
-        this.$router.replace('/');
-      }
+      // if(!bol){
+      //   this.$router.replace('/');
+      // }
+    },
+    postAddress: function () {
+      let that = this;
+      axios.post('https://api.talkpal.com/addresses', {
+        address: {
+          province: that.consignee.province,
+          city: that.consignee.city,
+          district: that.consignee.district,
+          line1: that.consignee.address,
+          phone_number: that.consignee.phone_number,
+          full_name: that.consignee.full_name,
+          street: null,
+          postal_code: null
+        },
+        headers: that.headers
+      })
+      .then(function (response) {
+        console.log(response.data.data);
+        that.address = response.data.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+    postOrders: function (){
+      let that = this;
+      axios.post('https://api.talkpal.com/orders', {
+        orders: {
+          product: 'goods',
+          product_id: that.goodsInfo.id,
+          address_id: that.address.id
+        },
+        headers: that.headers
+      })
+      .then(function (response) {
+        console.log(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+    jumpAdd_address: function () {
+      this.$router.push('/add_address');
+    },
+    addressClick(index){
+      this.addressListBol = false;
+      this.consignee = this.addressList[index];
     },
     choose() {
       this.show = !this.show;
     },
     onChangeProvince(a) {
       this.consignee.region = a.value;
+      this.consignee.province = a.value;
       // console.log(a);
     },
     onChangeCity(a) {
       this.consignee.region = this.consignee.region + a.value;
+      this.consignee.city = a.value;
       // console.log(a);
     },
     onChangeArea(a) {
       this.consignee.region = this.consignee.region + a.value;
+      this.consignee.district = a.value;
       // console.log(a);
       this.show = false;
+    },
+    getRequest: function () {
+      var url = location.search; //获取url中"?"符后的字串
+      var theRequest = new Object();
+      if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        var strs = str.split("&");
+        for(var i = 0; i < strs.length; i ++) {
+            theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+        }
+      }
+      return theRequest;
     }
   }
 };
@@ -191,6 +327,19 @@ body,
 .justify_between > span:nth-child(2) > img {
   height: 1rem;
   margin-left: 0.5rem;
+}
+
+.addressDetail>.AddressBtn{
+  padding: 0.2rem 1.25rem;
+}
+
+.AddressBtn>button{
+  color: #ffffff;
+  padding: 0.9rem 2.18rem;
+  font-size: 0.875rem;
+  background-color: #4dc7e7;
+  border-radius: 5px;
+  border: 0;
 }
 
 .border_bottom {
@@ -288,6 +437,10 @@ textarea {
   border-radius: 50px;
   /* width: 10%; */
   margin: 0 26.2%;
+}
+
+.addressItem{
+  padding: 0.5rem 1.25rem;
 }
 
 .divwrapBox {

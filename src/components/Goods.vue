@@ -1,29 +1,30 @@
 <template>
-  <div class="goods">
+  <div class="goods goodsInfo">
     <div class="header">
       <div>
         <app-banner :listImg="listImg"></app-banner>
       </div>
       <div class="goodsIntroduce">
-        <p>粉红猪小妹公仔</p>
-        <p>粉红猪小妹佩琪是一只非常可爱的小粉红猪，她与弟弟乔治、爸爸、妈妈快乐地住在一起。粉红猪小妹最喜欢做的事情是玩游戏，打扮的漂漂亮亮。</p>
+        <p>{{goodsInfo.name}}</p>
+        <!-- <p>粉红猪小妹佩琪是一只非常可爱的小粉红猪，她与弟弟乔治、爸爸、妈妈快乐地住在一起。粉红猪小妹最喜欢做的事情是玩游戏，打扮的漂漂亮亮。</p> -->
+        <p>{{goodsInfo.description}}</p>
       </div>
     </div>
     <div class="goodsDetails">
       <p>商品详情</p>
-      <p>粉红猪小妹佩琪是一只非常可爱的小粉红猪，她与弟弟乔治、爸爸、妈妈快乐地住在一起。粉红猪小妹最喜欢做的事情是玩游戏，打扮的漂漂亮亮，渡假，</p>
-      <div class="photoShow">
+      <p>{{goodsInfo.description}}</p>
+      <div class="photoShow" v-for="(item,index) in goodsInfo.images" :key="index">
+        <img :src="item.normal_url" :alt="item.alt">
+        <p>{{item.alt}}</p>
+      </div>
+      <!-- <div class="photoShow">
         <img src="../../static/img/img-shop-palpoint-big@3x.png" alt="">
         <p>粉红猪小妹全家福</p>
-      </div>
-      <div class="photoShow">
-        <img src="../../static/img/img-shop-palpoint-big@3x.png" alt="">
-        <p>粉红猪小妹全家福</p>
-      </div>
+      </div> -->
     </div>
     <div class="footer">
       <img src="../image/img-shop-palpoint-big.png">
-      <span class="exchangeNum">1000</span>
+      <span class="exchangeNum">{{goodsInfo.price}}</span>
       <span class="exchange" @click="exchangeClickFn">兑换</span>
     </div>
   </div>
@@ -34,6 +35,8 @@ import Banner from './Banner'
 import a from '../../static/img/img-shop-palpoint-big@3x.png'
 import b from '../../static/img/img-shop-palpoint-big@3x.png'
 import c from '../../static/img/img-shop-palpoint-big@3x.png'
+import axios from 'axios'
+
 export default {
   name: 'goods',
   data() {
@@ -48,16 +51,51 @@ export default {
         {
           url: c
         }
-      ]
-    }
-  },
-  methods: {
-    exchangeClickFn: function () {
-      this.$router.push('/closed');
+      ],
+      goodsInfo: {}
     }
   },
   components: {
     'app-banner': Banner
+  },
+  created: function (){
+    this.getGoodsInfo();
+  },
+  methods: {
+    getGoodsInfo: function () {
+      let that = this;
+      axios.get('https://api.talkpal.com/products/'+this.getRequest().id, {
+        headers: {
+          'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
+        }
+      })
+      .then(function (response) {
+        // console.log(response.data.data);
+        that.goodsInfo = response.data.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+    exchangeClickFn: function () {
+      let goodsInfo = this.goodsInfo,
+          id = goodsInfo.id,
+          name = goodsInfo.name,
+          price = goodsInfo.price;
+      this.$router.push('/closed?id='+id+"&name="+name+'&price='+price);
+    },
+    getRequest: function () {
+      var url = location.search; //获取url中"?"符后的字串
+      var theRequest = new Object();
+      if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        var strs = str.split("&");
+        for(var i = 0; i < strs.length; i ++) {
+            theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+        }
+      }
+      return theRequest;
+    }
   }
 };
 </script>

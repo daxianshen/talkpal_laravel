@@ -1,16 +1,16 @@
 <template>
   <div class="exchangeRecord">
-    <div class="record" v-for="(item,index) in 6" :key="index">
+    <div class="record" v-if="item" v-for="(item,index) in orderList" :key="index">
       <div class="recordItem">
         <img class="goodsImg" src="../image/list-pay-mouth.png">
         <div class="recordRight">
-          <span class="goodsName">粉红猪小妹</span>
-          <p class="goodsAddress">地址：广州市天河区金利来大厦1708 玲姐收  1231242425</p>
-          <p class="palCoin">消耗派点：<span>50000</span></p>
+          <span class="goodsName">{{item.product_detail.name}}</span>
+          <p class="goodsAddress">地址：{{item.shipment.address.province}}{{item.shipment.address.city}}{{item.shipment.address.district}}{{item.shipment.address.line1}} {{item.shipment.address.full_name}}收  1231242425</p>
+          <p class="palCoin">消耗派点：<span>{{item.product_detail.price}}</span></p>
         </div>
       </div>
       <div class="recordBottom">
-        <span class="orderId">订单号：3131415926</span>
+        <span class="orderId">订单号：{{item.id}}</span>
         <span class="seeLogistics" @click="sLogisticsClickFn(true)">查看物流</span>
       </div>
       <img class="completed" src="../image/img-list-completed.png" alt="">
@@ -47,12 +47,18 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: "exchangeRecord",
   data() {
     return {
       logisticsBol: false,
-      touchBanBol: false
+      touchBanBol: false,
+      orderList: [],
+      headers: {
+        'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
+      }
     };
   },
   mounted() {
@@ -63,9 +69,25 @@ export default {
     //   }
     // })
   },
+  created: function(){
+    this.getOrderList();
+  },
   methods: {
     sLogisticsClickFn: function(bol) {
       this.logisticsBol = bol;
+    },
+    getOrderList: function () {
+      let that = this;
+      axios.get('https://api.talkpal.com/orders?category=goods', {
+        headers: that.headers
+      })
+      .then(function (response) {
+        console.log(response.data.data);
+        that.orderList = response.data.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
   }
 };
