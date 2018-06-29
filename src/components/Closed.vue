@@ -93,10 +93,7 @@ export default {
       goodsInfo: {},
       address: {},
       addressList: [],
-      addressListBol: false,
-      headers: {
-        'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
-      }
+      addressListBol: false
     };
   },
   created: function () {
@@ -106,8 +103,8 @@ export default {
   methods: {
     getGoodsInfo: function () {
       let that = this;
-      axios.get('https://api.talkpal.com/products/'+this.getRequest().id, {
-        headers: that.headers
+      axios.get('https://api.talkpal.com/products/'+this.$utils.getUrlKey('id'), {
+        headers: that.$utils.headers
       })
       .then(function (response) {
         console.log(response.data.data);
@@ -120,10 +117,10 @@ export default {
     getAddressList: function () {
       let that = this;
       axios.get('https://api.talkpal.com/addresses', {
-        params: {
-          category: 'goods'
-        },
-        headers: that.headers
+        // params: {
+        //   category: 'goods'
+        // },
+        headers: that.$utils.headers
       })
       .then(function (response) {
         console.log(response.data.data);
@@ -205,7 +202,7 @@ export default {
           street: null,
           postal_code: null
         },
-        headers: that.headers
+        headers: that.$utils.headers
       })
       .then(function (response) {
         console.log(response.data.data);
@@ -223,7 +220,7 @@ export default {
           product_id: that.goodsInfo.id,
           address_id: that.address.id
         },
-        headers: that.headers
+        headers: that.$utils.headers
       })
       .then(function (response) {
         console.log(response.data.data);
@@ -233,7 +230,7 @@ export default {
       });
     },
     jumpAdd_address: function () {
-      this.$router.push('/mall/add_address');
+      this.$router.push('/add_address');
     },
     addressClick(index){
       this.addressListBol = false;
@@ -257,18 +254,6 @@ export default {
       this.consignee.district = a.value;
       // console.log(a);
       this.show = false;
-    },
-    getRequest: function () {
-      var url = location.search; //获取url中"?"符后的字串
-      var theRequest = new Object();
-      if (url.indexOf("?") != -1) {
-        var str = url.substr(1);
-        var strs = str.split("&");
-        for(var i = 0; i < strs.length; i ++) {
-            theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
-        }
-      }
-      return theRequest;
     }
   }
 };

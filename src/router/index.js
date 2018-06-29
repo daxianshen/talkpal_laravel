@@ -10,7 +10,8 @@ import Add_address from '@/components/Add_address'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
+  base: '/vuethink/',
   routes: [
     {
       path: '/hello',
@@ -21,7 +22,7 @@ export default new Router({
       }
     },
     {
-      path: '/mall/',
+      path: '/',
       name: 'Index',
       component: Indexs,
       meta: {
@@ -29,7 +30,7 @@ export default new Router({
       }
     },
     {
-      path: '/mall/goods',
+      path: '/goods',
       name: 'Goods',
       component: Goods,
       meta: {
@@ -37,7 +38,7 @@ export default new Router({
       }
     },
     {
-      path: '/mall/closed',
+      path: '/closed',
       name: 'Closed',
       component: Closed,
       meta: {
@@ -45,7 +46,7 @@ export default new Router({
       }
     },
     {
-      path: '/mall/exchangeRecord',
+      path: '/exchangeRecord',
       name: 'ExchangeRecord',
       component: ExchangeRecord,
       meta: {
@@ -53,7 +54,7 @@ export default new Router({
       }
     },
     {
-      path: '/mall/add_address',
+      path: '/add_address',
       name: 'Add_address',
       component: Add_address,
       meta: {
@@ -62,3 +63,4 @@ export default new Router({
     }
   ]
 })
+

@@ -46,9 +46,6 @@ export default {
         province: "",
         city: "",
         district: ""
-      },
-      headers: {
-        'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
       }
     }
   },
@@ -103,7 +100,7 @@ export default {
           street: null,
           postal_code: null
         },
-        headers: that.headers
+        headers: that.$utils.headers
       })
       .then(function (response) {
         console.log(response.data.data);

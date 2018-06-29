@@ -55,10 +55,7 @@ export default {
     return {
       logisticsBol: false,
       touchBanBol: false,
-      orderList: [],
-      headers: {
-        'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
-      }
+      orderList: []
     };
   },
   mounted() {
@@ -80,7 +77,7 @@ export default {
     getOrderList: function () {
       let that = this;
       axios.get('https://api.talkpal.com/orders?category=goods', {
-        headers: that.headers
+        headers: that.$utils.headers
       })
       .then(function (response) {
         console.log(response.data.data);

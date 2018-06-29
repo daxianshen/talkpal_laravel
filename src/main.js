@@ -5,7 +5,9 @@ import App from './App'
 import router from './router'
 import VDistpicker from 'v-distpicker'
 import swpier from 'swiper'
-
+import utils   from './utils/utils'    //获取url参数
+ 
+Vue.prototype.$utils=utils   //注册全局方法
 Vue.config.productionTip = false
 Vue.component('v-distpicker', VDistpicker);
 

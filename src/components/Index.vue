@@ -54,10 +54,10 @@ export default {
   },
   methods:{
     getUserData: function () {
-      let userId = this.getRequest().userId ? this.getRequest().userId : this.userId;
+      let userId = this.$utils.getUrlKey('userId') ? this.$utils.getUrlKey('userId') : this.userId;
       let that = this;
       axios.get('https://api.talkpal.com/users/' + userId , {
-
+        headers: that.$utils.headers
       })
       .then(function (response) {
         let data = response.data.data;
@@ -71,9 +71,7 @@ export default {
     getGoodsList: function() {
       let that = this;
       axios.get('https://api.talkpal.com/products', {
-        headers: {
-          'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
-        }
+        headers: that.$utils.headers
       })
       .then(function (response) {
         console.log(response.data.data);
@@ -102,22 +100,10 @@ export default {
       // })
     },
     goodsClick: function(num){
-      this.$router.push('/mall/goods?id='+num);
+      this.$router.push('/goods?id='+num);
     },
     tRecordClickFn: function () {
-      this.$router.push('/mall/exchangeRecord');      
-    },
-    getRequest: function () {
-      var url = location.search; //获取url中"?"符后的字串
-      var theRequest = new Object();
-      if (url.indexOf("?") != -1) {
-        var str = url.substr(1);
-        var strs = str.split("&");
-        for(var i = 0; i < strs.length; i ++) {
-            theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
-        }
-      }
-      return theRequest;
+      this.$router.push('/exchangeRecord');      
     }
   },
   created: function () {

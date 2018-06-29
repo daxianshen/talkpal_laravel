@@ -64,10 +64,8 @@ export default {
   methods: {
     getGoodsInfo: function () {
       let that = this;
-      axios.get('https://api.talkpal.com/products/'+this.getRequest().id, {
-        headers: {
-          'Authorization': 'Bearer ' + 'JS8plEsHfN_LRQCObNorlS9qs6Itq2WV7JJBRGPgfEOyCiO_qAMD7NXTQxDEpIX3FGfU7BNd53laOAsvFGZBaQ'
-        }
+      axios.get('https://api.talkpal.com/products/' + this.$utils.getUrlKey('id'), {
+        headers: that.$utils.headers
       })
       .then(function (response) {
         // console.log(response.data.data);
@@ -82,19 +80,7 @@ export default {
           id = goodsInfo.id,
           name = goodsInfo.name,
           price = goodsInfo.price;
-      this.$router.push('/mall/closed?id='+id+"&name="+name+'&price='+price);
-    },
-    getRequest: function () {
-      var url = location.search; //获取url中"?"符后的字串
-      var theRequest = new Object();
-      if (url.indexOf("?") != -1) {
-        var str = url.substr(1);
-        var strs = str.split("&");
-        for(var i = 0; i < strs.length; i ++) {
-            theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
-        }
-      }
-      return theRequest;
+      this.$router.push('/closed?id='+id+"&name="+name+'&price='+price);
     }
   }
 };
