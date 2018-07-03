@@ -2,7 +2,8 @@
   <div class="exchangeRecord">
     <div class="record" v-if="item" v-for="(item,index) in orderList" :key="index">
       <div class="recordItem">
-        <img class="goodsImg" src="../image/list-pay-mouth.png">
+        <img class="goodsImg" v-if="item.product_detail.images[0].normal_url" :src="item.product_detail.images[0].normal_url">
+        <img class="goodsImg" v-else src="../image/list-pay-mouth.png">
         <div class="recordRight">
           <span class="goodsName">{{item.product_detail.name}}</span>
           <p class="goodsAddress">地址：{{item.shipment.address.province}}{{item.shipment.address.city}}{{item.shipment.address.district}}{{item.shipment.address.line1}} {{item.shipment.address.full_name}}收  1231242425</p>

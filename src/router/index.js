@@ -11,7 +11,7 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'hash',
-  base: '/vuethink/',
+  base: '/store/',
   routes: [
     {
       path: '/hello',

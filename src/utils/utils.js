@@ -4,7 +4,6 @@ const headers = {
 // const headers = {
 //   'Authorization': 'Bearer ' + getCookie(token)
 // }
-
 //获取cookie、
 export function getCookie(name) {
   let arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
