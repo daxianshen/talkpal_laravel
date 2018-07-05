@@ -119,7 +119,7 @@ export default {
 .goodsDetails {
   background-color: #ffffff;
   padding: 0 10.93333%;
-  margin-bottom: 3rem;
+  padding-bottom: 3rem;
 }
 
 .goodsDetails > p:nth-child(1) {

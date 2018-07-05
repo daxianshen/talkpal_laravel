@@ -105,6 +105,7 @@ export default {
       .then(function (response) {
         console.log(response.data.data);
         that.address = response.data.data;
+        alert("保存成功！")
       })
       .catch(function (error) {
         console.log(error);

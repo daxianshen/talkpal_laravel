@@ -186,7 +186,7 @@ export default {
     querenFn(bol){
       this.closedSuccessBol = bol;
       if(!bol){
-        this.$router.replace('/');
+        this.$router.go(-2);
       }
     },
     postAddress: function () {
