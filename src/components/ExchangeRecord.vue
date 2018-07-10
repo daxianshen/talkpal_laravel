@@ -109,6 +109,7 @@ body,
   color: #445266;
   position: relative;
   height: 100%;
+  background-color: #efeff4;
 }
 
 .exchangeRecord .record {

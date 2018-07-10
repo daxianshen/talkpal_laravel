@@ -177,7 +177,7 @@ export default {
         }
       }
       // this.postAddress();
-      // this.postOrders();
+      this.postOrders();
       this.closedSuccessBol = bol;
       // if(!bol){
       //   this.$router.replace('/');
