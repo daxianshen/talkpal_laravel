@@ -13,11 +13,11 @@
     <div class="addressDetail">
       <p class="justify_between border_bottom">
         <span>收货人</span>
-        <input type="text" placeholder="" v-model="consignee.full_name">
+        <input type="text" placeholder="请填写收货人" v-model="consignee.full_name">
       </p>
       <p class="justify_between">
         <span>联系电话</span>
-        <input type="text" placeholder="" v-model="consignee.phone_number">
+        <input type="text" placeholder="请填写手机号" v-model="consignee.phone_number">
       </p>
       <p class="justify_between border_bottom">
         <span>所在地区</span>

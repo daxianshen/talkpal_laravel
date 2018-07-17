@@ -49,16 +49,15 @@ export default {
         //   goodsState: 'limited'
         // }
       ],
-      userId: 5026
+      userId: 46
     };
   },
   methods:{
     getUserData: function () {
-      let userId = this.$utils.getUrlKey('userId') ? this.$utils.getUrlKey('userId') : this.userId;
+      let userId = this.$utils.getCookie("userId") ? this.$utils.getCookie("userId") : this.userId;
+      console.log(this.$utils.getCookie("token"),this.$utils.getCookie("userId"));
       let that = this;
-      axios.get('https://api.talkpal.com/users/' + userId , {
-        headers: that.$utils.headers
-      })
+      this.$utils.getHttp('https://api.talkpal.com/users/' + userId)
       .then(function (response) {
         let data = response.data.data;
         console.log(response.data.data);
@@ -67,11 +66,24 @@ export default {
       .catch(function (error) {
         console.log(error);
       });
+      // axios.get('https://api.talkpal.com/users/' + userId , {
+      //   headers: that.$utils.headers
+      // })
+      // .then(function (response) {
+      //   let data = response.data.data;
+      //   console.log(response.data.data);
+      //   that.palpoint = data.pal_points;
+      // })
+      // .catch(function (error) {
+      //   console.log(error);
+      // });
     },
     getGoodsList: function() {
       let that = this;
       axios.get('https://api.talkpal.com/products', {
-        headers: that.$utils.headers
+        headers: {
+          'Authorization': 'Bearer ' + "7cDkq5sttD-EHJJno5JS70YoBM0RMzRxudiKh341FIFiO0JSOPF9jVEeq57P9cDlRcWgBhgYjmJNt2w9HBDDlQ"
+        }
       })
       .then(function (response) {
         console.log(response.data.data);
@@ -193,7 +205,7 @@ export default {
   position: absolute;
   color: #ffffff;
   background-color: #fa3056;
-  padding: 0.3rem 0.8rem;
+  padding: 0.2rem 0.8rem;
   border-radius: 6px;
   right: 0.3rem;
   top: 0.3rem;

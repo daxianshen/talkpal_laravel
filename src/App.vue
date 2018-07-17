@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <transition name="slide-fade">
+    <!-- <transition name="slide-fade"> -->
       <router-view/>
-    </transition>
+    <!-- </transition> -->
   </div>
 </template>
 
@@ -29,6 +29,10 @@ q:before,q:after{content: '';}
 abbr,acronym{border:0;}
 input,select,button {outline:none;}
 
+* {
+  -webkit-touch-callout: none;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -40,6 +44,10 @@ input,select,button {outline:none;}
 a {
   text-decoration: none;
 }
+img {
+  pointer-events: none; 
+}
+
 .slide-fade{
   position: absolute;left:0;right: 0;
 }

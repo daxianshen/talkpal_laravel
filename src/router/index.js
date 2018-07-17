@@ -34,7 +34,7 @@ export default new Router({
       name: 'Goods',
       component: Goods,
       meta: {
-        title: '商品名称'
+        title: '商品详情'
       }
     },
     {

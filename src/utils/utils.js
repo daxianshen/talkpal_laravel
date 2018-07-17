@@ -1,9 +1,29 @@
-const headers = {
-  'Authorization': 'Bearer ' + '7cDkq5sttD-EHJJno5JS70YoBM0RMzRxudiKh341FIFiO0JSOPF9jVEeq57P9cDlRcWgBhgYjmJNt2w9HBDDlQ'
-}
-// const headers = {
-//   'Authorization': 'Bearer ' + getCookie(token)
+import Axios from "axios";
+
+// let headers = {
+//   'Authorization': 'Bearer ' + '7cDkq5sttD-EHJJno5JS70YoBM0RMzRxudiKh341FIFiO0JSOPF9jVEeq57P9cDlRcWgBhgYjmJNt2w9HBDDlQ'
 // }
+let token = getCookie("token");
+let headers,userId;
+userId = getCookie("userId");
+if(token){
+  headers = {
+    'Authorization': 'Bearer ' + token
+  }
+  console.log(token)
+}
+export function getHttp(url,headers={}) {
+  headers["Authorization"] = 'Bearer ' + getCookie("token")
+  return Axios.get(url,{
+    headers: headers
+  })
+}
+export function postHttp(url,headers={}) {
+  headers["Authorization"] = 'Bearer ' + getCookie("token")
+  return Axios.post(url,{
+    headers: headers
+  })
+}
 //获取cookie、
 export function getCookie(name) {
   let arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
@@ -33,5 +53,11 @@ export default{
   getUrlKey:function(name){
    return decodeURIComponent((new RegExp('[?|&]'+name+'='+'([^&;]+?)(&|#|;|$)').exec(location.href)||[,""])[1].replace(/\+/g,'%20'))||null;
   },
-  headers
+  getCookie,
+  getHttp,
+  // postHttp,
+  setCookie,
+  delCookie,
+  headers,
+  userId
 }
