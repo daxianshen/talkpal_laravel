@@ -8,11 +8,12 @@ let headers,userId;
 userId = getCookie("userId");
 if(token){
   headers = {
+    // 'Authorization': 'Bearer ' + "7cDkq5sttD-EHJJno5JS70YoBM0RMzRxudiKh341FIFiO0JSOPF9jVEeq57P9cDlRcWgBhgYjmJNt2w9HBDDlQ"
     'Authorization': 'Bearer ' + token
   }
-  console.log(token)
 }
 export function getHttp(url,headers={}) {
+  // headers["Authorization"] = 'Bearer ' + "7cDkq5sttD-EHJJno5JS70YoBM0RMzRxudiKh341FIFiO0JSOPF9jVEeq57P9cDlRcWgBhgYjmJNt2w9HBDDlQ"
   headers["Authorization"] = 'Bearer ' + getCookie("token")
   return Axios.get(url,{
     headers: headers

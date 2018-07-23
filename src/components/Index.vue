@@ -80,11 +80,7 @@ export default {
     },
     getGoodsList: function() {
       let that = this;
-      axios.get('https://api.talkpal.com/products', {
-        headers: {
-          'Authorization': 'Bearer ' + "7cDkq5sttD-EHJJno5JS70YoBM0RMzRxudiKh341FIFiO0JSOPF9jVEeq57P9cDlRcWgBhgYjmJNt2w9HBDDlQ"
-        }
-      })
+      this.$utils.getHttp('https://api.talkpal.com/products')
       .then(function (response) {
         console.log(response.data.data);
         that.goodsList = response.data.data;

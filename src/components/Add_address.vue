@@ -2,11 +2,11 @@
   <div class="addressDetail">
       <p class="justify_between border_bottom">
         <span>收货人</span>
-        <input type="text" placeholder="" v-model="consignee.full_name">
+        <input type="text" placeholder="请填写收货人" v-model="consignee.full_name">
       </p>
-      <p class="justify_between">
+      <p class="justify_between border_bottom">
         <span>联系电话</span>
-        <input type="text" placeholder="" v-model="consignee.phone_number">
+        <input type="text" placeholder="请填写手机号" v-model="consignee.phone_number">
       </p>
       <p class="justify_between border_bottom">
         <span>所在地区</span>
@@ -16,12 +16,12 @@
       <p class="justify_between">
         <span>详细地址</span>
         <!-- <input type="text" placeholder="填写详细地址"> -->
-        <textarea name="city" id="city" cols="20" placeholder="填写详细地址" v-model="consignee.address"></textarea>
+        <textarea name="city" id="city" cols="20" placeholder="请填写详细地址" v-model="consignee.address"></textarea>
       </p>
       <div class="btn" @click="add_addressFn">保存</div>
-      <div class="divwrapBox" v-if="show">
+      <div class="divwrapBox" v-if="show" @click="showFalse">
         <!-- <button  @click="choose">点我选择区域</button> -->
-        <div class="divwrap">
+        <div class="divwrap" @click.stop="showTrue">
             <v-distpicker type="mobile" @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea"></v-distpicker>
         </div>
       </div>
@@ -87,6 +87,12 @@ export default {
       }
       this.postAddress();
     },
+    showFalse() {
+      this.show = false;
+    },
+    showTrue() {
+      // this.show = true;
+    },
     postAddress() {
       let that = this;
       axios.post('https://api.talkpal.com/addresses', {
@@ -117,7 +123,7 @@ export default {
       // console.log(a);
     },
     onChangeCity(a) {
-      this.consignee.region = this.consignee.region + a.value;
+      this.consignee.region = this.consignee.province + a.value;
       this.consignee.city = a.value;
       // console.log(a);
     },
@@ -204,6 +210,7 @@ textarea {
   left: 0;
   bottom: 0;
   width: 100%;
+  background-color: #ffffff;
 }
 
 .divwrap >>> .distpicker-address-wrapper {

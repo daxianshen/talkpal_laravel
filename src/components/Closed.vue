@@ -15,7 +15,7 @@
         <span>收货人</span>
         <input type="text" placeholder="请填写收货人" v-model="consignee.full_name">
       </p>
-      <p class="justify_between">
+      <p class="justify_between border_bottom">
         <span>联系电话</span>
         <input type="text" placeholder="请填写手机号" v-model="consignee.phone_number">
       </p>
@@ -27,7 +27,7 @@
       <p class="justify_between">
         <span>详细地址</span>
         <!-- <input type="text" placeholder="填写详细地址"> -->
-        <textarea name="city" id="city" cols="20" placeholder="填写详细地址" v-model="consignee.address"></textarea>
+        <textarea name="city" id="city" cols="20" placeholder="请填写详细地址" v-model="consignee.address"></textarea>
       </p>
       <p class="justify_between AddressBtn">
         <button @click="editAddress">选择地址</button>
@@ -46,7 +46,7 @@
         <span @click="querenFn(false)">好的</span>
       </div>
     </div>
-    <div v-if="addressListBol" class="successBox">
+    <div v-if="addressListBol" class="successBox" @click="closeAddressList">
       <div class="successBoxContent" style="text-align: left;">
         <div style="font-size: 1.5rem;padding-left: 1.25rem;">请选择</div>
         <div class="addressItem" v-for="(items,index) in addressList" :key="index" @click="addressClick(index)">
@@ -58,9 +58,9 @@
         </div>
       </div>
     </div>
-    <div class="divwrapBox" v-if="show">
+    <div class="divwrapBox" v-if="show" @click="showFalse">
       <!-- <button  @click="choose">点我选择区域</button> -->
-      <div class="divwrap">
+      <div class="divwrap" @click.stop="showTrue()">
           <v-distpicker type="mobile" @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea"></v-distpicker>
       </div>
     </div>
@@ -140,7 +140,21 @@ export default {
       });
     },
     editAddress() {
+      console.log(this.addressList)
+      if(!this.addressList.length){
+        alert("非常抱歉，您还没有添加地址！")
+        return
+      }
       this.addressListBol = true;
+    },
+    closeAddressList() {
+      this.addressListBol = false;
+    },
+    showFalse() {
+      this.show = false;
+    },
+    showTrue() {
+      // this.show = true;
     },
     closedBolFn: function(bol) {
       let n = '';
@@ -245,13 +259,13 @@ export default {
       // console.log(a);
     },
     onChangeCity(a) {
-      this.consignee.region = this.consignee.region + a.value;
       this.consignee.city = a.value;
+      this.consignee.region = this.consignee.province + a.value;
       // console.log(a);
     },
     onChangeArea(a) {
-      this.consignee.region = this.consignee.region + a.value;
       this.consignee.district = a.value;
+      this.consignee.region = this.consignee.region + a.value;
       // console.log(a);
       this.show = false;
     }
@@ -449,6 +463,7 @@ textarea {
   left: 0;
   bottom: 0;
   width: 100%;
+  background-color: #ffffff;
 }
 
 .divwrap >>> .distpicker-address-wrapper {
