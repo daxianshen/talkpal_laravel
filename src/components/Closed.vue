@@ -215,7 +215,9 @@ export default {
           full_name: that.consignee.full_name,
           street: null,
           postal_code: null
-        },
+        }
+      },
+      {
         headers: that.$utils.headers
       })
       .then(function (response) {
@@ -233,7 +235,9 @@ export default {
           product: 'goods',
           product_id: that.goodsInfo.id,
           address_id: that.address.id
-        },
+        }
+      },
+      {
         headers: that.$utils.headers
       })
       .then(function (response) {

@@ -19,11 +19,11 @@ export function getHttp(url,headers={}) {
     headers: headers
   })
 }
-export function postHttp(url,headers={}) {
+export function postHttp(url,body={},headers={}) {
   headers["Authorization"] = 'Bearer ' + getCookie("token")
   return Axios.post(url,{
     headers: headers
-  })
+  },body)
 }
 //获取cookie、
 export function getCookie(name) {

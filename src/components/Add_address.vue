@@ -95,6 +95,7 @@ export default {
     },
     postAddress() {
       let that = this;
+      console.log(that.$utils.headers);
       axios.post('https://api.talkpal.com/addresses', {
         address: {
           province: that.consignee.province,
@@ -105,7 +106,9 @@ export default {
           full_name: that.consignee.full_name,
           street: null,
           postal_code: null
-        },
+        }
+      },
+      {
         headers: that.$utils.headers
       })
       .then(function (response) {
@@ -138,6 +141,26 @@ export default {
 </script>
 
 <style>
+::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #bec1c8;
+}
+
+:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #bec1c8;
+}
+
+::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #bec1c8;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  color: #bec1c8;
+}
+
 body{
   background-color: #ffffff;
 }
