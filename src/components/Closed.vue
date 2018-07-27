@@ -42,12 +42,12 @@
       <div class="successBoxContent">
         <img :src="recharge">
         <span>兑换成功</span>
-        <p>恭喜你成功兑换<br>粉红猪小妹</p>
+        <p>恭喜你成功兑换<br>{{goodsInfo.name}}</p>
         <span @click="querenFn(false)">好的</span>
       </div>
     </div>
     <div v-if="addressListBol" class="successBox" @click="closeAddressList">
-      <div class="successBoxContent" style="text-align: left;">
+      <div class="successBoxContent" style="text-align: left;height: 50%;overflow-y: scroll;">
         <div style="font-size: 1.5rem;padding-left: 1.25rem;">请选择</div>
         <div class="addressItem" v-for="(items,index) in addressList" :key="index" @click="addressClick(index)">
           <div class="justify_between">
@@ -92,6 +92,7 @@ export default {
       recharge: Recharge,
       goodsInfo: {},
       address: {},
+      addressId: 0,
       addressList: [],
       addressListBol: false
     };
@@ -107,7 +108,7 @@ export default {
         headers: that.$utils.headers
       })
       .then(function (response) {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         that.goodsInfo = response.data.data;
       })
       .catch(function (error) {
@@ -123,7 +124,7 @@ export default {
         headers: that.$utils.headers
       })
       .then(function (response) {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         that.addressList = response.data.data;
         if (that.addressList.length === 0) {
           alert(请添加地址);
@@ -140,7 +141,6 @@ export default {
       });
     },
     editAddress() {
-      console.log(this.addressList)
       if(!this.addressList.length){
         alert("非常抱歉，您还没有添加地址！")
         return
@@ -158,6 +158,7 @@ export default {
     },
     closedBolFn: function(bol) {
       let n = '';
+      console.log(this.consignee);
       for (let key in this.consignee) {
       //  console.log(this.consignee[key]);
         if(!this.consignee[key]){
@@ -177,25 +178,26 @@ export default {
             default:
               break;
           }
-          alert(n + "不能为空");
-          return
+          if(n.length != 0){
+            alert(n + "不能为空");
+            return
+          }
+          
         }else{
-          if(key == 'phone'){
+          if(key == 'phone_number'){
             let reg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
             if (!reg.test(this.consignee[key])) {
                 alert("请输入有效的手机号码！");
                 return
             }
           }
-          // console.log(this.consignee[key]);
         }
       }
-      // this.postAddress();
-      this.postOrders();
-      this.closedSuccessBol = bol;
-      // if(!bol){
-      //   this.$router.replace('/');
-      // }
+      if(this.checkObject(this.consignee,this.addressList[this.addressId])){
+        this.postOrders(bol);
+      }else{
+        this.postAddress();
+      }
     },
     querenFn(bol){
       this.closedSuccessBol = bol;
@@ -203,9 +205,40 @@ export default {
         this.$router.go(-2);
       }
     },
+    checkObject (obj1, obj2) {
+      return Object.keys(obj1).every(key => obj1[key] == obj2[key])
+    },
     postAddress: function () {
       let that = this;
       axios.post('https://api.talkpal.com/addresses', {
+        address: {
+          province: that.consignee.province,
+          city: that.consignee.city,
+          district: that.consignee.district,
+          line1: that.consignee.address,
+          phone_number: that.consignee.phone_number,
+          full_name: that.consignee.full_name,
+          street: "null",
+          postal_code: "null"
+        }
+      },
+      {
+        headers: that.$utils.headers
+      })
+      .then(function (response) {
+        // console.log(response.data.data);
+        that.address = response.data.data;
+        that.consignee.id = that.address.id;
+        that.postOrders(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert("操作失败");
+      });
+    },
+    patchAddress: function () {
+      let that = this;
+      axios.patch('https://api.talkpal.com/addresses', {
         address: {
           province: that.consignee.province,
           city: that.consignee.city,
@@ -221,27 +254,29 @@ export default {
         headers: that.$utils.headers
       })
       .then(function (response) {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         that.address = response.data.data;
+        that.closedSuccessBol = bol;
       })
       .catch(function (error) {
         console.log(error);
+        alert("操作失败");
       });
     },
-    postOrders: function (){
+    postOrders: function (bol){
       let that = this;
+      console.log(this.consignee.id);
       axios.post('https://api.talkpal.com/orders', {
-        orders: {
           product: 'goods',
           product_id: that.goodsInfo.id,
-          address_id: that.address.id
-        }
+          address_id: that.consignee.id
       },
       {
         headers: that.$utils.headers
       })
       .then(function (response) {
-        console.log(response.data.data);
+        // console.log(response.data.data);
+        that.closedSuccessBol = bol;
       })
       .catch(function (error) {
         console.log(error);
@@ -252,7 +287,9 @@ export default {
     },
     addressClick(index){
       this.addressListBol = false;
-      this.consignee = this.addressList[index];
+      this.addressId = index;
+      // this.consignee = this.addressList[index];
+      this.consignee = JSON.parse(JSON.stringify(this.addressList[index]))
     },
     choose() {
       this.show = !this.show;
@@ -450,6 +487,7 @@ textarea {
 
 .addressItem{
   padding: 0.5rem 1.25rem;
+  margin-top: 0.5rem;
 }
 
 .divwrapBox {

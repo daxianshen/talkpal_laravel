@@ -70,13 +70,13 @@ export default {
             case 'address':
               n = '地址'
               break;
-            default:
-              break;
           }
-          alert(n + "不能为空");
-          return
+          if(n.length == 0){
+            alert(n + "不能为空");
+            return
+          }
         }else{
-          if(key == 'phone'){
+          if(key == 'phone_number'){
             let reg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
             if (!reg.test(this.consignee[key])) {
                 alert("请输入有效的手机号码！");
@@ -104,8 +104,8 @@ export default {
           line1: that.consignee.address,
           phone_number: that.consignee.phone_number,
           full_name: that.consignee.full_name,
-          street: null,
-          postal_code: null
+          street: "null",
+          postal_code: "null"
         }
       },
       {
@@ -114,7 +114,9 @@ export default {
       .then(function (response) {
         console.log(response.data.data);
         that.address = response.data.data;
-        alert("保存成功！")
+        if(confirm("保存成功!")){
+          that.$router.go(-1);
+        }
       })
       .catch(function (error) {
         console.log(error);

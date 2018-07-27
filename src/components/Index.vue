@@ -7,17 +7,19 @@
           <img src="../image/img-shop-palpoint-big.png" align="center">
           我的派点： {{palpoint}}
         </span>
-        <span class="ticketRecord" @click="tRecordClickFn">兑奖记录</span>
+        <span class="ticketRecord" @click="tRecordClickFn">兑换记录</span>
       </div>
     </div>
     <div class="hootGoods">
-      <p>热门商品</p>
+      <p v-if="goodsList.length > 0">热门商品</p>
+      <p c-else>暂无商品可兑换</p>
       <div class="goodsBox">
         <div class="goods" v-for="(item,index) in goodsList" :key="index" @click="goodsClick(item.id)">
           <span class="limited">限量</span>
           <!-- <span class="limited" :style="{'background-color': limitedColor}">兑完</span> -->
-          <img class="goodsImg" src="../image/img-shop-palpoint-big@3x.png">
-          <p>{{item.name}}</p>
+          <img class="goodsImg" @error="imgError(item)" :src="item.images[0].normal_url" v-if="item.images.length">
+          <img class="goodsImg" src="../image/notImg.png" v-else>
+          <p style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{item.name}}</p>
           <span class="goodsPrice"><img src="../image/img-shop-palpoint-big.png" align="center">{{item.price}}</span>
         </div>
         <!-- <div class="goods">
@@ -55,35 +57,33 @@ export default {
   methods:{
     getUserData: function () {
       let userId = this.$utils.getCookie("userId") ? this.$utils.getCookie("userId") : this.userId;
-      console.log(this.$utils.getCookie("token"),this.$utils.getCookie("userId"));
+      // console.log(this.$utils.getCookie("token"),this.$utils.getCookie("userId"));
       let that = this;
       this.$utils.getHttp('https://api.talkpal.com/users/' + userId)
       .then(function (response) {
+        // console.log(response.data.data);
         let data = response.data.data;
-        console.log(response.data.data);
         that.palpoint = data.pal_points;
       })
       .catch(function (error) {
         console.log(error);
       });
-      // axios.get('https://api.talkpal.com/users/' + userId , {
-      //   headers: that.$utils.headers
-      // })
-      // .then(function (response) {
-      //   let data = response.data.data;
-      //   console.log(response.data.data);
-      //   that.palpoint = data.pal_points;
-      // })
-      // .catch(function (error) {
-      //   console.log(error);
-      // });
     },
     getGoodsList: function() {
       let that = this;
       this.$utils.getHttp('https://api.talkpal.com/products')
       .then(function (response) {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         that.goodsList = response.data.data;
+        that.goodsList.forEach((element,index) => {
+          element.images.forEach(element2 => {
+            if(element2.caption.search("--cover") != -1 ){
+              // console.log(element);
+              element.images[0].normal_url = element2.normal_url;
+            }
+            // element.normal_url = element.normal_url.replace(/api/,'zh-cn');
+          });
+        });
       })
       .catch(function (error) {
         console.log(error);
@@ -112,6 +112,9 @@ export default {
     },
     tRecordClickFn: function () {
       this.$router.push('/exchangeRecord');      
+    },
+    imgError(item) {
+      item.images[0].normal_url = require('../image/notImg.png');
     }
   },
   created: function () {
@@ -122,6 +125,9 @@ export default {
 </script>
 
 <style>
+body{
+  background-color: #efeff4;
+}
 .mainIndex {
   width: 100%;
   color: #445266;
@@ -209,7 +215,8 @@ export default {
 }
 
 .goods .goodsImg {
-  width: 61.773%;
+  max-width: 61.773%;
+  height: 6.3125rem;
 }
 
 .goods > p {

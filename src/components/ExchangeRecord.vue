@@ -2,11 +2,11 @@
   <div class="exchangeRecord">
     <div class="record" v-if="item" v-for="(item,index) in orderList" :key="index">
       <div class="recordItem">
-        <img class="goodsImg" v-if="item.product_detail.images[0].normal_url" :src="item.product_detail.images[0].normal_url">
-        <img class="goodsImg" v-else src="../image/list-pay-mouth.png">
+        <img class="goodsImg" @error="imgError(item)" v-if="item.product_detail.images.length" :src="item.product_detail.images[0].normal_url">
+        <img class="goodsImg" v-else src="../image/notImg.png">
         <div class="recordRight">
           <span class="goodsName">{{item.product_detail.name}}</span>
-          <p class="goodsAddress">地址：{{item.shipment.address.province}}{{item.shipment.address.city}}{{item.shipment.address.district}}{{item.shipment.address.line1}} {{item.shipment.address.full_name}}收  1231242425</p>
+          <p class="goodsAddress">地址：{{item.shipment.address.province}}{{item.shipment.address.city}}{{item.shipment.address.district}}{{item.shipment.address.line1}} {{item.shipment.address.full_name}}收  {{item.shipment.address.phone_number}}</p>
           <p class="palCoin">消耗派点：<span>{{item.product_detail.price}}</span></p>
         </div>
       </div>
@@ -16,6 +16,7 @@
       </div>
       <img class="completed" src="../image/img-list-completed.png" alt="">
     </div>
+    <div class="noOrders" v-if="orderList.length == 0">您还没有订单，去兑换一个吧。</div>
     <div class="logisticsBox" v-if="logisticsBol" @touchmove.prevent>
       <div class="logistics">
         <p>物流信息</p>
@@ -81,12 +82,22 @@ export default {
         headers: that.$utils.headers
       })
       .then(function (response) {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         that.orderList = response.data.data;
+        that.orderList.forEach((element,index) => {
+          element.product_detail.images.forEach(element2 => {
+            if(element2.caption.search("--cover") != -1 ){
+              element.product_detail.images[0].normal_url = element2.normal_url;
+            }
+          });
+        });
       })
       .catch(function (error) {
         console.log(error);
       });
+    },
+    imgError(item) {
+      item.product_detail.images[0].normal_url = require('../image/notImg.png');
     }
   }
 };
@@ -250,5 +261,9 @@ body,
   position: absolute;
   top: 0;
   right: 1.25rem;
+}
+.noOrders{
+  text-align: center;
+  color: #bec1c8;
 }
 </style>

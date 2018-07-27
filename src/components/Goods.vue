@@ -13,9 +13,9 @@
     <div class="goodsDetails">
       <p>商品详情</p>
       <p>{{goodsInfo.description}}</p>
-      <div class="photoShow" v-for="(item,index) in goodsInfo.images" :key="index">
-        <img :src="item.normal_url" :alt="item.alt">
-        <p>{{item.alt}}</p>
+      <div class="photoShow" v-if="detailsList.length" v-for="(item,index) in detailsList" :key="index">
+        <img :src="item.large_url" :alt="item.caption">
+        <p>{{item.caption}}</p>
       </div>
       <!-- <div class="photoShow">
         <img src="../../static/img/img-shop-palpoint-big@3x.png" alt="">
@@ -32,27 +32,15 @@
 
 <script>
 import Banner from './Banner'
-import a from '../../static/img/img-shop-palpoint-big@3x.png'
-import b from '../../static/img/img-shop-palpoint-big@3x.png'
-import c from '../../static/img/img-shop-palpoint-big@3x.png'
 import axios from 'axios'
 
 export default {
   name: 'goods',
   data() {
     return {
-      listImg: [
-        {
-          url: a
-        },
-        {
-          url: b
-        },
-        {
-          url: c
-        }
-      ],
-      goodsInfo: {}
+      listImg: [],
+      goodsInfo: {},
+      detailsList: []
     }
   },
   components: {
@@ -62,14 +50,24 @@ export default {
     this.getGoodsInfo();
   },
   methods: {
-    getGoodsInfo: function () {
+    async getGoodsInfo() {
       let that = this;
-      axios.get('https://api.talkpal.com/products/' + this.$utils.getUrlKey('id'), {
+      await axios.get('https://api.talkpal.com/products/' + this.$utils.getUrlKey('id'), {
         headers: that.$utils.headers
       })
       .then(function (response) {
         // console.log(response.data.data);
         that.goodsInfo = response.data.data;
+        that.goodsInfo.images.forEach((element,index) => {
+          if(element.caption.search("--details") != -1 ){
+            element.caption = element.caption.replace('--details', '');
+            that.detailsList.push(element);
+          }else if(element.caption.search("--slide") != -1 ){
+            that.listImg.push({
+              url: element.large_url
+            });
+          }
+        });
       })
       .catch(function (error) {
         console.log(error);
@@ -87,6 +85,9 @@ export default {
 </script>
 
 <style>
+body{
+  background-color: #ffffff;
+}
 .goods {
   width: 100%;
   color: #445266;
