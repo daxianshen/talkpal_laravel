@@ -13,8 +13,8 @@ Vue.config.productionTip = false
 Vue.component('v-distpicker', VDistpicker);
 Vue.use(VueLazyload,{
   preLoad: 1.3,
-  error:'./static/img/error.png',
-  loading:'./static/img/loading.png'
+  error:'./static/img/error.jpg',
+  loading:'./static/img/loading.gif'
 })
 /* eslint-disable no-new */
 new Vue({

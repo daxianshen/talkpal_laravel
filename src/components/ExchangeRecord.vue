@@ -105,22 +105,18 @@ export default {
 </script>
 
 <style>
-body {
-  background-color: #efeff4;
-}
-
 html,
 body,
 #app {
   width: 100%;
   height: 100%;
+  background-color: #efeff4;
 }
 
 .exchangeRecord {
-  padding: 0.5rem 0.625rem 0;
+  padding: 0.5rem 0.625rem;
   color: #445266;
   position: relative;
-  height: 100%;
   background-color: #efeff4;
 }
 

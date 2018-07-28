@@ -179,4 +179,10 @@ body{
   margin-left: 1rem;
   margin-right: 0.3rem;
 }
+
+@media screen and (max-width: 320px) and (max-height: 568px) {
+  .goodsDetails{
+    padding: 0 5%;
+  }
+}
 </style>

@@ -163,7 +163,7 @@ export default {
   color: #bec1c8;
 }
 
-body{
+html,body,#app{
   background-color: #ffffff;
 }
 .addressDetail p {
