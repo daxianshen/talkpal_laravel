@@ -14,7 +14,7 @@
       <p>商品详情</p>
       <p>{{goodsInfo.description}}</p>
       <div class="photoShow" v-if="detailsList.length" v-for="(item,index) in detailsList" :key="index">
-        <img :src="item.large_url" :alt="item.caption">
+        <img v-lazy="item.large_url" :alt="item.caption">
         <p>{{item.caption}}</p>
       </div>
       <!-- <div class="photoShow">
@@ -58,6 +58,7 @@ export default {
       .then(function (response) {
         // console.log(response.data.data);
         that.goodsInfo = response.data.data;
+        that.goodsInfo.price = parseInt(that.goodsInfo.price);
         that.goodsInfo.images.forEach((element,index) => {
           if(element.caption.search("--details") != -1 ){
             element.caption = element.caption.replace('--details', '');

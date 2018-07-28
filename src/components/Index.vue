@@ -12,12 +12,12 @@
     </div>
     <div class="hootGoods">
       <p v-if="goodsList.length > 0">热门商品</p>
-      <p c-else>暂无商品可兑换</p>
+      <p v-else>暂无商品可兑换</p>
       <div class="goodsBox">
         <div class="goods" v-for="(item,index) in goodsList" :key="index" @click="goodsClick(item.id)">
           <span class="limited">限量</span>
           <!-- <span class="limited" :style="{'background-color': limitedColor}">兑完</span> -->
-          <img class="goodsImg" @error="imgError(item)" :src="item.images[0].normal_url" v-if="item.images.length">
+          <img class="goodsImg" @error="imgError(item)" v-lazy="item.images[0].normal_url" v-if="item.images.length">
           <img class="goodsImg" src="../image/notImg.png" v-else>
           <p style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{item.name}}</p>
           <span class="goodsPrice"><img src="../image/img-shop-palpoint-big.png" align="center">{{item.price}}</span>
@@ -76,6 +76,7 @@ export default {
         // console.log(response.data.data);
         that.goodsList = response.data.data;
         that.goodsList.forEach((element,index) => {
+          element.price = parseInt(element.price);
           element.images.forEach(element2 => {
             if(element2.caption.search("--cover") != -1 ){
               // console.log(element);
@@ -84,6 +85,7 @@ export default {
             // element.normal_url = element.normal_url.replace(/api/,'zh-cn');
           });
         });
+        that.goodsList.sort(that.compare("price"));
       })
       .catch(function (error) {
         console.log(error);
@@ -115,6 +117,23 @@ export default {
     },
     imgError(item) {
       item.images[0].normal_url = require('../image/notImg.png');
+    },
+    compare(prop) {
+      return function (obj1, obj2) {
+          var val1 = obj1[prop];
+          var val2 = obj2[prop];
+          if (!isNaN(Number(val1)) && !isNaN(Number(val2))) {
+              val1 = Number(val1);
+              val2 = Number(val2);
+          }
+          if (val1 < val2) {
+              return -1;
+          } else if (val1 > val2) {
+              return 1;
+          } else {
+              return 0;
+          }            
+      } 
     }
   },
   created: function () {

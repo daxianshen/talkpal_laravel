@@ -3,8 +3,8 @@ import Axios from "axios";
 // let headers = {
 //   'Authorization': 'Bearer ' + '7cDkq5sttD-EHJJno5JS70YoBM0RMzRxudiKh341FIFiO0JSOPF9jVEeq57P9cDlRcWgBhgYjmJNt2w9HBDDlQ'
 // }
-// let token = getCookie("token");
-let token = "Dd7LXGw9sQEFfGsG5z46IMulReqRthYNG82FIhTULg-DY7oBJ2g4lyK_a1hC-2VyhaJ6DRqoVGTaeAtQu02qQg";
+let token = getCookie("token");
+// let token = "Dd7LXGw9sQEFfGsG5z46IMulReqRthYNG82FIhTULg-DY7oBJ2g4lyK_a1hC-2VyhaJ6DRqoVGTaeAtQu02qQg";
 let headers,userId;
 userId = getCookie("userId");
 if(token){

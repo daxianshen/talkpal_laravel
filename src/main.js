@@ -6,11 +6,16 @@ import router from './router'
 import VDistpicker from 'v-distpicker'
 import swpier from 'swiper'
 import utils   from './utils/utils'    //获取url参数
- 
+import VueLazyload from 'vue-lazyload'
+
 Vue.prototype.$utils=utils   //注册全局方法
 Vue.config.productionTip = false
 Vue.component('v-distpicker', VDistpicker);
-
+Vue.use(VueLazyload,{
+  preLoad: 1.3,
+  error:'./static/img/error.png',
+  loading:'./static/img/loading.png'
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

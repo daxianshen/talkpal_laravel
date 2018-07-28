@@ -110,6 +110,7 @@ export default {
       .then(function (response) {
         // console.log(response.data.data);
         that.goodsInfo = response.data.data;
+        that.goodsInfo.price = parseInt(that.goodsInfo.price);
       })
       .catch(function (error) {
         console.log(error);

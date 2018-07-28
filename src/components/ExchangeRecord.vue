@@ -2,7 +2,7 @@
   <div class="exchangeRecord">
     <div class="record" v-if="item" v-for="(item,index) in orderList" :key="index">
       <div class="recordItem">
-        <img class="goodsImg" @error="imgError(item)" v-if="item.product_detail.images.length" :src="item.product_detail.images[0].normal_url">
+        <img class="goodsImg" @error="imgError(item)" v-if="item.product_detail.images.length" v-lazy="item.product_detail.images[0].normal_url">
         <img class="goodsImg" v-else src="../image/notImg.png">
         <div class="recordRight">
           <span class="goodsName">{{item.product_detail.name}}</span>
@@ -85,6 +85,7 @@ export default {
         // console.log(response.data.data);
         that.orderList = response.data.data;
         that.orderList.forEach((element,index) => {
+          element.product_detail.price = parseInt(element.product_detail.price);
           element.product_detail.images.forEach(element2 => {
             if(element2.caption.search("--cover") != -1 ){
               element.product_detail.images[0].normal_url = element2.normal_url;
