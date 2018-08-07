@@ -5,25 +5,25 @@ import Axios from "axios";
 // }
 let token = getCookie("token");
 // let token = "Dd7LXGw9sQEFfGsG5z46IMulReqRthYNG82FIhTULg-DY7oBJ2g4lyK_a1hC-2VyhaJ6DRqoVGTaeAtQu02qQg";
-let headers,userId;
-userId = getCookie("userId");
+let url = 'https://api.talkpal.com/';
+let headers,userId = getCookie("userId");
 if(token){
   headers = {
     'Authorization': 'Bearer ' + token
   }
 }
-export function getHttp(url,headers={}) {
-  headers["Authorization"] = 'Bearer ' + token
-  return Axios.get(url,{
-    headers: headers
-  })
-}
-export function postHttp(url,body={},headers={}) {
-  headers["Authorization"] = 'Bearer ' + getCookie("token")
-  return Axios.post(url,{
-    headers: headers
-  },body)
-}
+// export function getHttp(url,headers={}) {
+//   headers["Authorization"] = 'Bearer ' + token
+//   return Axios.get(url,{
+//     headers: headers
+//   })
+// }
+// export function postHttp(url,body={},headers={}) {
+//   headers["Authorization"] = 'Bearer ' + getCookie("token")
+//   return Axios.post(url,{
+//     headers: headers
+//   },body)
+// }
 //获取cookie、
 export function getCookie(name) {
   let arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
@@ -54,10 +54,10 @@ export default{
    return decodeURIComponent((new RegExp('[?|&]'+name+'='+'([^&;]+?)(&|#|;|$)').exec(location.href)||[,""])[1].replace(/\+/g,'%20'))||null;
   },
   getCookie,
-  getHttp,
-  // postHttp,
   setCookie,
   delCookie,
   headers,
-  userId
+  userId,
+  token,
+  url
 }

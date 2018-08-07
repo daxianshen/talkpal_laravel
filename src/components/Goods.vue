@@ -46,35 +46,32 @@ export default {
   components: {
     'app-banner': Banner
   },
-  created: function (){
+  created (){
     this.getGoodsInfo();
   },
   methods: {
-    async getGoodsInfo() {
-      let that = this;
-      await axios.get('https://api.talkpal.com/products/' + this.$utils.getUrlKey('id'), {
-        headers: that.$utils.headers
-      })
-      .then(function (response) {
+    getGoodsInfo() {
+      this.$api.get(this.$utils.url + 'products/' + this.$utils.getUrlKey('id'))
+      .then((response) => {
         // console.log(response.data.data);
-        that.goodsInfo = response.data.data;
-        that.goodsInfo.price = parseInt(that.goodsInfo.price);
-        that.goodsInfo.images.forEach((element,index) => {
+        this.goodsInfo = response.data.data;
+        this.goodsInfo.price = parseInt(this.goodsInfo.price);
+        this.goodsInfo.images.forEach((element,index) => {
           if(element.caption.search("--details") != -1 ){
             element.caption = element.caption.replace('--details', '');
-            that.detailsList.push(element);
+            this.detailsList.push(element);
           }else if(element.caption.search("--slide") != -1 ){
-            that.listImg.push({
+            this.listImg.push({
               url: element.large_url
             });
           }
         });
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
     },
-    exchangeClickFn: function () {
+    exchangeClickFn () {
       let goodsInfo = this.goodsInfo,
           id = goodsInfo.id,
           name = goodsInfo.name,

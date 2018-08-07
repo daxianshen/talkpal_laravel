@@ -50,6 +50,8 @@
 
 <script>
 import axios from 'axios'
+import api from '../utils/api'
+import { Toast } from 'vant'
 
 export default {
   name: "exchangeRecord",
@@ -61,30 +63,23 @@ export default {
     };
   },
   mounted() {
-    // document.addEventListener("touchmove",function(e){
-    //   if(this.touchBanBol){
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //   }
-    // })
+    
   },
-  created: function(){
+  created(){
     this.getOrderList();
   },
   methods: {
-    sLogisticsClickFn: function(bol) {
+    sLogisticsClickFn(bol) {
       // this.logisticsBol = bol;
-      alert("该功能正在努力开发中！");
+      Toast("该功能正在努力开发中！");
     },
-    getOrderList: function () {
-      let that = this;
-      axios.get('https://api.talkpal.com/orders?category=goods', {
-        headers: that.$utils.headers
-      })
-      .then(function (response) {
+    getOrderList() {
+      // let that = this;
+      api.get(this.$utils.url + 'orders?category=goods')
+      .then((response) => {
         // console.log(response.data.data);
-        that.orderList = response.data.data;
-        that.orderList.forEach((element,index) => {
+        this.orderList = response.data.data;
+        this.orderList.forEach((element,index) => {
           element.product_detail.price = parseInt(element.product_detail.price);
           element.product_detail.images.forEach(element2 => {
             if(element2.caption.search("--cover") != -1 ){
@@ -93,7 +88,7 @@ export default {
           });
         });
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
     },

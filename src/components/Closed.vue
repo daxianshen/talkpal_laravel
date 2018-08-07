@@ -30,8 +30,8 @@
         <textarea name="city" id="city" cols="20" placeholder="请填写详细地址" v-model="consignee.address"></textarea>
       </p>
       <p class="justify_between AddressBtn">
-        <button @click="editAddress">选择地址</button>
-        <button @click="jumpAdd_address">添加地址</button>
+        <button type="default" @click="editAddress">选择地址</button>
+        <button type="default" @click="jumpAdd_address">添加地址</button>
       </p>
     </div>
     <div class="footer">
@@ -71,7 +71,8 @@
 import VDistpicker from "v-distpicker"
 import Recharge from '../../static/img/recharge.png'
 import axios from 'axios'
-
+import { Button, Toast } from 'vant'
+import api from '../utils/api'
 export default {
   name: "closed",
   components: { VDistpicker },
@@ -97,53 +98,44 @@ export default {
       addressListBol: false
     };
   },
-  created: function () {
+  created() {
     this.getGoodsInfo();
     this.getAddressList();
   },
   methods: {
-    getGoodsInfo: function () {
-      let that = this;
-      axios.get('https://api.talkpal.com/products/'+this.$utils.getUrlKey('id'), {
-        headers: that.$utils.headers
-      })
-      .then(function (response) {
+    getGoodsInfo () {
+      api.get(this.$utils.url + 'products/'+this.$utils.getUrlKey('id'))
+      .then((response) => {
         // console.log(response.data.data);
-        that.goodsInfo = response.data.data;
-        that.goodsInfo.price = parseInt(that.goodsInfo.price);
+        this.goodsInfo = response.data.data;
+        this.goodsInfo.price = parseInt(this.goodsInfo.price);
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
     },
-    getAddressList: function () {
-      let that = this;
-      axios.get('https://api.talkpal.com/addresses', {
-        // params: {
-        //   category: 'goods'
-        // },
-        headers: that.$utils.headers
-      })
-      .then(function (response) {
+    getAddressList () {
+      api.get(this.$utils.url + 'addresses')
+      .then((response) => {
         // console.log(response.data.data);
-        that.addressList = response.data.data;
-        if (that.addressList.length === 0) {
-          alert(请添加地址);
+        this.addressList = response.data.data;
+        if (this.addressList.length === 0) {
+          Toast('请添加地址');
           return
         }
-        that.addressList.map(function(item) {
+        this.addressList.map((item) => {
           item.region = item.province + item.city + item.district;
           item.address = item.line1;
         })
-        // that.addressListBol = true;
+        // this.addressListBol = true;
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
     },
     editAddress() {
       if(!this.addressList.length){
-        alert("非常抱歉，您还没有添加地址！")
+        Toast("非常抱歉，您还没有添加地址！");
         return
       }
       this.addressListBol = true;
@@ -157,11 +149,9 @@ export default {
     showTrue() {
       // this.show = true;
     },
-    closedBolFn: function(bol) {
+    closedBolFn(bol) {
       let n = '';
-      console.log(this.consignee);
       for (let key in this.consignee) {
-      //  console.log(this.consignee[key]);
         if(!this.consignee[key]){
           switch (key) {
             case 'full_name':
@@ -180,7 +170,7 @@ export default {
               break;
           }
           if(n.length != 0){
-            alert(n + "不能为空");
+            Toast(n + "不能为空");
             return
           }
           
@@ -188,7 +178,7 @@ export default {
           if(key == 'phone_number'){
             let reg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
             if (!reg.test(this.consignee[key])) {
-                alert("请输入有效的手机号码！");
+                Toast("请输入有效的手机号码！");
                 return
             }
           }
@@ -209,81 +199,80 @@ export default {
     checkObject (obj1, obj2) {
       return Object.keys(obj1).every(key => obj1[key] == obj2[key])
     },
-    postAddress: function () {
-      let that = this;
-      axios.post('https://api.talkpal.com/addresses', {
+    postAddress () {
+      // let that = this;
+      api.post(this.$utils.url + 'addresses', {
         address: {
-          province: that.consignee.province,
-          city: that.consignee.city,
-          district: that.consignee.district,
-          line1: that.consignee.address,
-          phone_number: that.consignee.phone_number,
-          full_name: that.consignee.full_name,
+          province: this.consignee.province,
+          city: this.consignee.city,
+          district: this.consignee.district,
+          line1: this.consignee.address,
+          phone_number: this.consignee.phone_number,
+          full_name: this.consignee.full_name,
           street: "null",
           postal_code: "null"
         }
-      },
-      {
-        headers: that.$utils.headers
       })
-      .then(function (response) {
+      .then((response) => {
         // console.log(response.data.data);
-        that.address = response.data.data;
-        that.consignee.id = that.address.id;
-        that.postOrders(true);
+        this.address = response.data.data;
+        this.consignee.id = this.address.id;
+        this.postOrders(true);
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
-        alert("操作失败");
+        Toast("操作失败");
       });
     },
-    patchAddress: function () {
-      let that = this;
-      axios.patch('https://api.talkpal.com/addresses', {
+    patchAddress () {
+      axios.patch(this.$utils.url + 'addresses', {
         address: {
-          province: that.consignee.province,
-          city: that.consignee.city,
-          district: that.consignee.district,
-          line1: that.consignee.address,
-          phone_number: that.consignee.phone_number,
-          full_name: that.consignee.full_name,
+          province: this.consignee.province,
+          city: this.consignee.city,
+          district: this.consignee.district,
+          line1: this.consignee.address,
+          phone_number: this.consignee.phone_number,
+          full_name: this.consignee.full_name,
           street: null,
           postal_code: null
         }
       },
       {
-        headers: that.$utils.headers
+        headers: this.$utils.headers
       })
-      .then(function (response) {
+      .then((response) => {
         // console.log(response.data.data);
-        that.address = response.data.data;
-        that.closedSuccessBol = bol;
+        this.address = response.data.data;
+        this.closedSuccessBol = bol;
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
-        alert("操作失败");
+        Toast("操作失败");
       });
     },
-    postOrders: function (bol){
+    postOrders (bol){
       let that = this;
-      console.log(this.consignee.id);
-      axios.post('https://api.talkpal.com/orders', {
+      api.post(this.$utils.url + 'orders', {
           product: 'goods',
-          product_id: that.goodsInfo.id,
-          address_id: that.consignee.id
-      },
-      {
-        headers: that.$utils.headers
+          product_id: this.goodsInfo.id,
+          address_id: this.consignee.id
       })
-      .then(function (response) {
-        // console.log(response.data.data);
+      .then((response) => {
+        // console.log(response.data);
+        if(response.data.message == 'Pal points is not enough'){
+          Toast("您的派点余额不足以兑换！");
+          return
+        }
         that.closedSuccessBol = bol;
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error);
+        if(error.response.status == 422){
+          Toast("您的派点余额不足以兑换！");
+        }
       });
     },
-    jumpAdd_address: function () {
+    jumpAdd_address () {
       this.$router.push('/add_address');
     },
     addressClick(index){
@@ -382,7 +371,7 @@ body,
 
 .AddressBtn>button{
   color: #ffffff;
-  padding: 0.9rem 2.18rem;
+  padding: 0rem 2.18rem;
   font-size: 0.875rem;
   background-color: #4dc7e7;
   border-radius: 5px;

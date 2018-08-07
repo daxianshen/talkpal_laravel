@@ -55,27 +55,25 @@ export default {
     };
   },
   methods:{
-    getUserData: function () {
+    getUserData () {
       let userId = this.$utils.getCookie("userId") ? this.$utils.getCookie("userId") : this.userId;
       // console.log(this.$utils.getCookie("token"),this.$utils.getCookie("userId"));
-      let that = this;
-      this.$utils.getHttp('https://api.talkpal.com/users/' + userId)
-      .then(function (response) {
-        // console.log(response.data.data);
-        let data = response.data.data;
-        that.palpoint = data.pal_points;
+      // let that = this;
+      this.$api.get(this.$utils.url + 'users/' + userId)
+      .then((response) => {
+        this.palpoint = response.data.data.pal_points;
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
     },
-    getGoodsList: function() {
-      let that = this;
-      this.$utils.getHttp('https://api.talkpal.com/products')
-      .then(function (response) {
+    getGoodsList () {
+      // let that = this;
+      this.$api.get(this.$utils.url + 'products')
+      .then((response) => {
         // console.log(response.data.data);
-        that.goodsList = response.data.data;
-        that.goodsList.forEach((element,index) => {
+        this.goodsList = response.data.data;
+        this.goodsList.forEach((element,index) => {
           element.price = parseInt(element.price);
           element.images.forEach(element2 => {
             if(element2.caption.search("--cover") != -1 ){
@@ -85,9 +83,9 @@ export default {
             // element.normal_url = element.normal_url.replace(/api/,'zh-cn');
           });
         });
-        that.goodsList.sort(that.compare("price"));
+        this.goodsList.sort(this.compare("price"));
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
       // axios({
@@ -109,10 +107,10 @@ export default {
       //   console.log(response.data);
       // })
     },
-    goodsClick: function(num){
+    goodsClick (num){
       this.$router.push('/goods?id='+num);
     },
-    tRecordClickFn: function () {
+    tRecordClickFn () {
       this.$router.push('/exchangeRecord');      
     },
     imgError(item) {
@@ -136,7 +134,7 @@ export default {
       } 
     }
   },
-  created: function () {
+  created () {
     this.getUserData();
     this.getGoodsList();
   }

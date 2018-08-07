@@ -47,7 +47,7 @@ export default {
         loop: true,
         speed: 600,
         autoplay: 4000,
-        onTouchEnd: function() {
+        onTouchEnd() {
           swiper.startAutoplay();
         },
         observer:true,

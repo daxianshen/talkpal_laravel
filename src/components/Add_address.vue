@@ -53,7 +53,7 @@ export default {
     choose() {
       this.show = !this.show;
     },
-    add_addressFn: function() {
+    add_addressFn() {
       let n = '';
       for (let key in this.consignee) {
         if(!this.consignee[key]){
@@ -94,31 +94,26 @@ export default {
       // this.show = true;
     },
     postAddress() {
-      let that = this;
-      console.log(that.$utils.headers);
-      axios.post('https://api.talkpal.com/addresses', {
+      this.$api.post(this.$utils.url + 'addresses', {
         address: {
-          province: that.consignee.province,
-          city: that.consignee.city,
-          district: that.consignee.district,
-          line1: that.consignee.address,
-          phone_number: that.consignee.phone_number,
-          full_name: that.consignee.full_name,
+          province: this.consignee.province,
+          city: this.consignee.city,
+          district: this.consignee.district,
+          line1: this.consignee.address,
+          phone_number: this.consignee.phone_number,
+          full_name: this.consignee.full_name,
           street: "null",
           postal_code: "null"
         }
-      },
-      {
-        headers: that.$utils.headers
       })
-      .then(function (response) {
+      .then((response) => {
         console.log(response.data.data);
-        that.address = response.data.data;
+        this.address = response.data.data;
         if(confirm("保存成功!")){
-          that.$router.go(-1);
+          this.$router.go(-1);
         }
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
     },

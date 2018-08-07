@@ -5,10 +5,12 @@ import App from './App'
 import router from './router'
 import VDistpicker from 'v-distpicker'
 import swpier from 'swiper'
-import utils   from './utils/utils'    //获取url参数
+import utils  from './utils/utils'    //获取url参数
+import api  from './utils/api'
 import VueLazyload from 'vue-lazyload'
 
 Vue.prototype.$utils=utils   //注册全局方法
+Vue.prototype.$api=api   //注册全局方法
 Vue.config.productionTip = false
 Vue.component('v-distpicker', VDistpicker);
 Vue.use(VueLazyload,{
