@@ -4,10 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VDistpicker from 'v-distpicker'
-import swpier from 'swiper'
 import utils  from './utils/utils'    //获取url参数
 import api  from './utils/api'
 import VueLazyload from 'vue-lazyload'
+import 'babel-polyfill'
+import Es6Promise from 'es6-promise'
+Es6Promise.polyfill()
 
 Vue.prototype.$utils=utils   //注册全局方法
 Vue.prototype.$api=api   //注册全局方法

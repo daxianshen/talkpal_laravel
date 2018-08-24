@@ -1,10 +1,10 @@
 import Axios from "axios";
 
 // let headers = {
-//   'Authorization': 'Bearer ' + 'Dd7LXGw9sQEFfGsG5z46IMulReqRthYNG82FIhTULg-DY7oBJ2g4lyK_a1hC-2VyhaJ6DRqoVGTaeAtQu02qQg
+//   'Authorization': 'Bearer ' + 'vL7bZkM0IBrtjYYcUC_ihqpxlwGkpVzKWXq9yi5rbxX8K6pCjd-D2uMlb6s21RzRs5Zkcq1zITdv_bifs7CFNg'
 // }
 let token = getCookie("token");
-// let token = "Dd7LXGw9sQEFfGsG5z46IMulReqRthYNG82FIhTULg-DY7oBJ2g4lyK_a1hC-2VyhaJ6DRqoVGTaeAtQu02qQg";
+// let token = "vL7bZkM0IBrtjYYcUC_ihqpxlwGkpVzKWXq9yi5rbxX8K6pCjd-D2uMlb6s21RzRs5Zkcq1zITdv_bifs7CFNg";
 let url = 'https://api.talkpal.com/';
 let headers,userId = getCookie("userId");
 if(token){
